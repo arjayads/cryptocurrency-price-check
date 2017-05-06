@@ -3,8 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ads.check.rate.exchange_rate_check.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_save"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/action_save"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_view"
+        android:orderInCategory="100"
+        android:title="@string/action_view"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_recent_searches"
+        android:orderInCategory="100"
+        android:title="@string/action_recent_searches"
         app:showAsAction="never" />
 </menu>
