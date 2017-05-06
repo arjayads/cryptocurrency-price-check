@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
             changeTextView.setText(ticker.getChange());
             volumeTextView.setText(ticker.getVolume());
             timeTextView.setText(cryptonatorResponse.getTimestamp()+"");
+        } else {
+            showSnackbar(cryptonatorResponse.getError(), findViewById(R.id.toolbar), Snackbar.LENGTH_INDEFINITE);
         }
     }
 
