@@ -4,7 +4,7 @@ package ads.check.rate.exchange_rate_check.api;
 public class CryptonatorResponse {
 
     private Ticker ticker;
-    private long timestamp;
+    private String timestamp;
     private boolean success;
     private String error;
 
@@ -16,11 +16,11 @@ public class CryptonatorResponse {
         this.ticker = ticker;
     }
 
-    public long getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 

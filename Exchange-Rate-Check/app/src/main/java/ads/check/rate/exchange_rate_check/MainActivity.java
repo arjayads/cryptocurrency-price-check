@@ -26,7 +26,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import ads.check.rate.exchange_rate_check.api.CryptonatorApi;
 import ads.check.rate.exchange_rate_check.api.CryptonatorResponse;
@@ -90,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
             snackbar.dismiss();
         }
 
-        hasEnteredCurrency();
-
         if (!hasEnteredCurrency()) {
             showSnackbar("Select base and target currency", findViewById(R.id.toolbar), Snackbar.LENGTH_INDEFINITE);
             return;
@@ -108,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
         CryptonatorApi cryptonatorApi = retrofit.create(CryptonatorApi.class);
 
         String param = baseCurrency.getCode() + "-" + targetCurrency.getCode();
+
+        Log.d("MAIN.param", param);
+
         Call<CryptonatorResponse> call = cryptonatorApi.tick(param.toLowerCase());
 
         call.enqueue(new Callback<CryptonatorResponse>() {
@@ -129,22 +133,30 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean hasEnteredCurrency() {
 
-        String baseStr = baseAutoCompleteTV.getText().toString();
-        String targetStr = targetAutoCompleteTV.getText().toString();
 
-        if (baseStr != null && !baseStr.equals("")) {
-            baseCurrency = new Currency();
-            baseCurrency.setCode(baseStr);
-            baseCurrency.setName(baseStr);
+        if (targetCurrency == null && baseCurrency == null) {
+
+            String baseStr = baseAutoCompleteTV.getText().toString();
+            String targetStr = targetAutoCompleteTV.getText().toString();
+
+            if (baseStr != null && !baseStr.equals("")) {
+                baseCurrency = new Currency();
+                baseCurrency.setCode(baseStr);
+                baseCurrency.setName(baseStr);
+            }
+
+            if (targetStr != null && !targetStr.equals("")) {
+                targetCurrency = new Currency();
+                targetCurrency.setCode(targetStr);
+                targetCurrency.setName(targetStr);
+            }
+
+            return (targetCurrency != null && baseCurrency != null) ;
+
+        } else {
+            return true;
         }
 
-        if (targetStr != null && !targetStr.equals("")) {
-            targetCurrency = new Currency();
-            targetCurrency.setCode(targetStr);
-            targetCurrency.setName(targetStr);
-        }
-
-        return (targetCurrency != null && baseCurrency != null) ;
     }
 
     private void hideKeyBoard() {
@@ -176,7 +188,11 @@ public class MainActivity extends AppCompatActivity {
             priceTextView.setText(ticker.getPrice());
             changeTextView.setText(ticker.getChange());
             volumeTextView.setText(ticker.getVolume());
-            timeTextView.setText(cryptonatorResponse.getTimestamp()+"");
+
+            Date date = new Date(Long.parseLong(cryptonatorResponse.getTimestamp()) * 1000);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy hh:mm:ss");
+
+            timeTextView.setText(simpleDateFormat.format(date));
 
             toogleResultViews(View.VISIBLE);
 
