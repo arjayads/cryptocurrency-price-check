@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
     CryptonatorResponse cryptonatorResponse;
 
+    ProgressBar progressBar;
+
     AutoCompleteTextView baseAutoCompleteTV;
     AutoCompleteTextView targetAutoCompleteTV;
     private static Snackbar snackbar;
@@ -59,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -100,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        progressBar.setVisibility(View.VISIBLE);
+
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .create();
@@ -119,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<CryptonatorResponse> call, Response<CryptonatorResponse> response) {
                 cryptonatorResponse = response.body();
 
+                progressBar.setVisibility(View.INVISIBLE);
                 updateResultsView();
             }
 
