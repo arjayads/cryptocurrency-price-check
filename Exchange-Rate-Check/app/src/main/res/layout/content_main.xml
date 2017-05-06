@@ -166,24 +166,28 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp">
 
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="AutoCompleteTextView" />
+
 
         <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView4"
+            android:id="@+id/base_autoCompleteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="AutoCompleteTextView" />
+            android:hint="Target currency (USD, BTC, YOC)"
+            android:text="" />
+
+        <AutoCompleteTextView
+            android:id="@+id/target_autoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Target currency (USD, BTC, YOC)"
+            android:text="" />
 
         <Button
-            android:id="@+id/button15"
+            android:id="@+id/go_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Button" />
+            android:text="Go" />
     </LinearLayout>
 
 

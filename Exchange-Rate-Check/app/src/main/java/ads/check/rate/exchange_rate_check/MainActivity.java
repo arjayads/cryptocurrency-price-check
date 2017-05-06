@@ -47,13 +47,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        Button goButton = (Button) findViewById(R.id.go_button);
-//        goButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                findRates();
-//            }
-//        });
+        Button goButton = (Button) findViewById(R.id.go_button);
+        goButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findRates();
+            }
+        });
 
         readCurrencies();
         setBaseAutocompleteData();
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setBaseAutocompleteData() {
-        /*baseAutoCompleteTV = (AutoCompleteTextView)
+        baseAutoCompleteTV = (AutoCompleteTextView)
                 findViewById(R.id.base_autoCompleteTextView);
 
         ArrayAdapter<Currency> badapter = new ArrayAdapter<> (this,android.R.layout.select_dialog_item, currencyList);
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<Currency> tadapter = new ArrayAdapter<> (this,android.R.layout.select_dialog_item, currencyList);
 
         targetAutoCompleteTV.setThreshold(1);
-        targetAutoCompleteTV.setAdapter(tadapter);*/
+        targetAutoCompleteTV.setAdapter(tadapter);
 
     }
 
