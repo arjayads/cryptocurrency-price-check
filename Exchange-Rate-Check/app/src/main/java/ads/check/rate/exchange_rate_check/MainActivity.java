@@ -327,8 +327,8 @@ public class MainActivity extends AppCompatActivity {
 
             baseAutoCompleteTV.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             targetAutoCompleteTV.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-            
-        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE)  {
+
+        } else if (orientation == Configuration.ORIENTATION_PORTRAIT)  {
 
             baseAutoCompleteTV.setImeOptions(EditorInfo.IME_ACTION_NEXT);
             targetAutoCompleteTV.setImeOptions(EditorInfo.IME_ACTION_GO);
