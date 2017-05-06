@@ -225,6 +225,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
             android:text="Base"
+            android:textColor="@android:color/holo_green_dark"
             android:textSize="@dimen/label_text_size" />
 
         <TextView
@@ -233,6 +234,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
             android:text="Target"
+            android:textColor="@android:color/holo_green_dark"
             android:textSize="@dimen/label_text_size" />
 
     </LinearLayout>
