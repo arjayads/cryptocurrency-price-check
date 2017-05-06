@@ -1,5 +1,6 @@
 package ads.check.rate.exchange_rate_check;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -8,10 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -66,9 +70,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void findRates() {
 
+        hideKeyBoard();
+        toogleResultViews(View.INVISIBLE);
+
         if (snackbar != null) {
             snackbar.dismiss();
         }
+
 
         if (targetCurrency == null || baseCurrency == null) {
             showSnackbar("Select base and target currency", findViewById(R.id.toolbar), Snackbar.LENGTH_INDEFINITE);
@@ -105,6 +113,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void hideKeyBoard() {
+
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     private void updateResultsView() {
 
         TextView baseLabel = (TextView) findViewById(R.id.base_textView);
@@ -126,9 +143,22 @@ public class MainActivity extends AppCompatActivity {
             changeTextView.setText(ticker.getChange());
             volumeTextView.setText(ticker.getVolume());
             timeTextView.setText(cryptonatorResponse.getTimestamp()+"");
+
+            toogleResultViews(View.VISIBLE);
+
         } else {
             showSnackbar(cryptonatorResponse.getError(), findViewById(R.id.toolbar), Snackbar.LENGTH_INDEFINITE);
         }
+    }
+
+    private void toogleResultViews(int visibility) {
+
+        TableLayout result = (TableLayout)findViewById(R.id.result_tableLayout);
+        result.setVisibility(visibility);
+
+        LinearLayout header = (LinearLayout)findViewById(R.id.base_target_linearLayout);
+        header.setVisibility(visibility);
+
     }
 
     private void showSnackbar(String message, View view, int length) {
