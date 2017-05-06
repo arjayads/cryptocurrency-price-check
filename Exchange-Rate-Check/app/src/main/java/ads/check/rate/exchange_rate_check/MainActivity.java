@@ -2,6 +2,7 @@ package ads.check.rate.exchange_rate_check;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -314,6 +315,24 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+
+        int orientation = newConfig.orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE)  {
+
+            baseAutoCompleteTV.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+            targetAutoCompleteTV.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+            
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE)  {
+
+            baseAutoCompleteTV.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+            targetAutoCompleteTV.setImeOptions(EditorInfo.IME_ACTION_GO);
+        }
     }
 
     @Override
