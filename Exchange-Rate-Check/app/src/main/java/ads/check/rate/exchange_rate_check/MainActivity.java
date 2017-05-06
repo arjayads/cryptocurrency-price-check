@@ -2,13 +2,19 @@ package ads.check.rate.exchange_rate_check;
 
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,11 +22,22 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import ads.check.rate.exchange_rate_check.api.CryptonatorApi;
+import ads.check.rate.exchange_rate_check.api.CryptonatorResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity {
+
+    CryptonatorResponse cryptonatorResponse;
 
     AutoCompleteTextView baseAutoCompleteTV;
     AutoCompleteTextView targetAutoCompleteTV;
- 
+    private static Snackbar snackbar;
+
     ArrayList<Currency> currencyList = new ArrayList<>();
 
     @Override
@@ -30,8 +47,68 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Button goButton = (Button) findViewById(R.id.go_button);
+        goButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findRates();
+            }
+        });
+
         readCurrencies();
         setBaseAutocompleteData();
+    }
+
+    private void findRates() {
+
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(CryptonatorApi.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        CryptonatorApi cryptonatorApi = retrofit.create(CryptonatorApi.class);
+
+        Call<CryptonatorResponse> call = cryptonatorApi.tick("btc-usd");
+        call.enqueue(new Callback<CryptonatorResponse>() {
+
+            @Override
+            public void onResponse(Call<CryptonatorResponse> call, Response<CryptonatorResponse> response) {
+                cryptonatorResponse = response.body();
+
+                updateResultsView();
+            }
+
+            @Override
+            public void onFailure(Call<CryptonatorResponse> call, Throwable t) {
+                showSnackbar("Consider checking your internet connection", findViewById(R.id.toolbar), Snackbar.LENGTH_INDEFINITE);
+            }
+        });
+
+    }
+
+    private void updateResultsView() {
+
+        if (cryptonatorResponse != null) {
+
+
+        }
+    }
+
+    private void showSnackbar(String message, View view, int length) {
+
+        snackbar = Snackbar.make(view, message, length);
+
+        snackbar.setAction("OK", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackbar.dismiss();
+            }
+        });
+
+        snackbar.show();
     }
 
     private void readCurrencies() {
