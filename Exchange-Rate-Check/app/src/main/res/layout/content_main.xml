@@ -34,7 +34,7 @@
                 android:id="@+id/base_autoCompleteTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Target currency (USD, BTC, YOC)"
+                android:hint="Base currency (USD, BTC, YOC)"
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:maxLines="1"
