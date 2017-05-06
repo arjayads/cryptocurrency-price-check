@@ -60,6 +60,13 @@
                 android:textColor="@android:color/background_light"
                 android:textSize="24sp" />
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Inverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
             <LinearLayout
                 android:id="@+id/base_target_linearLayout"
                 android:layout_width="match_parent"
@@ -94,13 +101,6 @@
 
             </LinearLayout>
 
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
 
             <TableLayout
                 android:id="@+id/result_tableLayout"
