@@ -142,7 +142,7 @@
             android:hint="Target currency (USD, BTC, YOC)"
             android:maxLines="1"
             android:inputType="text"
-            android:imeOptions="actionNone"
+            android:imeOptions="actionGo"
             android:text="" />
 
         <Button

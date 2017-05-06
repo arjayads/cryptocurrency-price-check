@@ -7,9 +7,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,7 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
         readCurrencies();
         setBaseAutocompleteData();
+
+
+        toogleResultViews(View.VISIBLE);
     }
 
 
@@ -109,9 +113,6 @@ public class MainActivity extends AppCompatActivity {
         CryptonatorApi cryptonatorApi = retrofit.create(CryptonatorApi.class);
 
         String param = baseCurrency.getCode() + "-" + targetCurrency.getCode();
-
-        Log.d("MAIN.param", param);
-
         Call<CryptonatorResponse> call = cryptonatorApi.tick(param.toLowerCase());
 
         call.enqueue(new Callback<CryptonatorResponse>() {
@@ -299,6 +300,17 @@ public class MainActivity extends AppCompatActivity {
                 if (item instanceof Currency){
                     targetCurrency = (Currency) item;
                 }
+            }
+        });
+
+        targetAutoCompleteTV.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    findRates();
+                }
+                return false;
             }
         });
     }
