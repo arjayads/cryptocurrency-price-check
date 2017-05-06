@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<Currency> currencyList = new ArrayList<>();
 
+    Currency baseCurrency;
+    Currency targetCurrency;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +66,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void findRates() {
 
+        if (snackbar != null) {
+            snackbar.dismiss();
+        }
+
+        if (targetCurrency == null || baseCurrency == null) {
+            showSnackbar("Select base and target currency", findViewById(R.id.toolbar), Snackbar.LENGTH_INDEFINITE);
+            return;
+        }
+
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .create();
@@ -73,7 +85,9 @@ public class MainActivity extends AppCompatActivity {
 
         CryptonatorApi cryptonatorApi = retrofit.create(CryptonatorApi.class);
 
-        Call<CryptonatorResponse> call = cryptonatorApi.tick("btc-usd");
+        String param = baseCurrency.getCode() + "-" + targetCurrency.getCode();
+        Call<CryptonatorResponse> call = cryptonatorApi.tick(param.toLowerCase());
+
         call.enqueue(new Callback<CryptonatorResponse>() {
 
             @Override
@@ -169,6 +183,16 @@ public class MainActivity extends AppCompatActivity {
 
         baseAutoCompleteTV.setThreshold(1);
         baseAutoCompleteTV.setAdapter(badapter);
+        baseAutoCompleteTV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object item = parent.getItemAtPosition(position);
+                if (item instanceof Currency){
+
+                    baseCurrency =  (Currency) item;
+                }
+            }
+        });
 
 
         targetAutoCompleteTV = (AutoCompleteTextView)
@@ -176,11 +200,18 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayAdapter<Currency> tadapter = new ArrayAdapter<> (this,android.R.layout.select_dialog_item, currencyList);
 
-        targetAutoCompleteTV.setThreshold(1);
         targetAutoCompleteTV.setAdapter(tadapter);
-
+        targetAutoCompleteTV.setThreshold(1);
+        targetAutoCompleteTV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object item = parent.getItemAtPosition(position);
+                if (item instanceof Currency){
+                    targetCurrency =  (Currency) item;
+                }
+            }
+        });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
