@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,6 +69,18 @@ public class MainActivity extends AppCompatActivity {
         setBaseAutocompleteData();
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (currencyList.isEmpty()) {
+            readCurrencies();
+            setBaseAutocompleteData();
+            toogleResultViews(View.INVISIBLE);
+        }
+    }
+
     private void findRates() {
 
         hideKeyBoard();
@@ -77,8 +90,9 @@ public class MainActivity extends AppCompatActivity {
             snackbar.dismiss();
         }
 
+        hasEnteredCurrency();
 
-        if (targetCurrency == null || baseCurrency == null) {
+        if (!hasEnteredCurrency()) {
             showSnackbar("Select base and target currency", findViewById(R.id.toolbar), Snackbar.LENGTH_INDEFINITE);
             return;
         }
@@ -111,6 +125,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private boolean hasEnteredCurrency() {
+
+        String baseStr = baseAutoCompleteTV.getText().toString();
+        String targetStr = targetAutoCompleteTV.getText().toString();
+
+        if (baseStr != null && !baseStr.equals("")) {
+            baseCurrency = new Currency();
+            baseCurrency.setCode(baseStr);
+            baseCurrency.setName(baseStr);
+        }
+
+        if (targetStr != null && !targetStr.equals("")) {
+            targetCurrency = new Currency();
+            targetCurrency.setCode(targetStr);
+            targetCurrency.setName(targetStr);
+        }
+
+        return (targetCurrency != null && baseCurrency != null) ;
     }
 
     private void hideKeyBoard() {
@@ -218,11 +252,15 @@ public class MainActivity extends AppCompatActivity {
         baseAutoCompleteTV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                baseCurrency = null;
+
                 Object item = parent.getItemAtPosition(position);
                 if (item instanceof Currency){
 
                     baseCurrency =  (Currency) item;
                 }
+
             }
         });
 
@@ -237,9 +275,12 @@ public class MainActivity extends AppCompatActivity {
         targetAutoCompleteTV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                targetCurrency = null;
+
                 Object item = parent.getItemAtPosition(position);
                 if (item instanceof Currency){
-                    targetCurrency =  (Currency) item;
+                    targetCurrency = (Currency) item;
                 }
             }
         });
