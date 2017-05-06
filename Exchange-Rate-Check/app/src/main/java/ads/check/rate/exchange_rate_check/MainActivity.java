@@ -71,9 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
         readCurrencies();
         setBaseAutocompleteData();
-
-
-        toogleResultViews(View.VISIBLE);
     }
 
 
