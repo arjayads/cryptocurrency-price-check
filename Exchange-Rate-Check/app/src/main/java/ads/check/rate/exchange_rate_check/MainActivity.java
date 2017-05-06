@@ -133,10 +133,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean hasEnteredCurrency() {
 
 
-        if (targetCurrency == null && baseCurrency == null) {
+        String baseStr = baseAutoCompleteTV.getText().toString();
+        String targetStr = targetAutoCompleteTV.getText().toString();
 
-            String baseStr = baseAutoCompleteTV.getText().toString();
-            String targetStr = targetAutoCompleteTV.getText().toString();
+        if (targetCurrency == null && baseCurrency == null) {
 
             if (baseStr != null && !baseStr.equals("")) {
                 baseCurrency = new Currency();
@@ -153,6 +153,10 @@ public class MainActivity extends AppCompatActivity {
             return (targetCurrency != null && baseCurrency != null) ;
 
         } else {
+
+            if(baseStr.equals("")) return false;
+            if(targetStr.equals("")) return false;
+
             return true;
         }
 
