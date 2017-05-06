@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">Currency Exchange Rates</string>
+    <string name="app_name">Exchange Rates</string>
     <string name="action_save">Save search result</string>
     <string name="action_view">View saved results</string>
     <string name="action_recent_searches">Recent searches</string>
+    <string name="toolbar_title">Exchange rates</string>
 </resources>
