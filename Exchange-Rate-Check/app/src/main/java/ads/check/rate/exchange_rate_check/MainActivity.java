@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 
 import ads.check.rate.exchange_rate_check.api.CryptonatorApi;
 import ads.check.rate.exchange_rate_check.api.CryptonatorResponse;
+import ads.check.rate.exchange_rate_check.api.Ticker;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -91,9 +93,25 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateResultsView() {
 
-        if (cryptonatorResponse != null) {
+        TextView baseLabel = (TextView) findViewById(R.id.base_textView);
+        TextView targetLabel = (TextView) findViewById(R.id.target_textView);
 
+        TextView priceTextView = (TextView) findViewById(R.id.price_value_textView);
+        TextView changeTextView = (TextView) findViewById(R.id.change_value_textView);
+        TextView volumeTextView = (TextView) findViewById(R.id.volume_value_textView);
+        TextView timeTextView = (TextView) findViewById(R.id.time_value_textView);
 
+        if (cryptonatorResponse != null && cryptonatorResponse.isSuccess()) {
+
+            Ticker ticker = cryptonatorResponse.getTicker();
+
+            baseLabel.setText("Base: " + ticker.getBase());
+            targetLabel.setText("Target: " + ticker.getTarget());
+
+            priceTextView.setText(ticker.getPrice());
+            changeTextView.setText(ticker.getChange());
+            volumeTextView.setText(ticker.getVolume());
+            timeTextView.setText(cryptonatorResponse.getTimestamp()+"");
         }
     }
 
