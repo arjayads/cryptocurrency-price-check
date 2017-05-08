@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                 volumeValueRow.setVisibility(View.GONE);
 
             } else {
-                
+
                 volumeRow.setVisibility(View.VISIBLE);
                 volumeValueRow.setVisibility(View.VISIBLE);
 
