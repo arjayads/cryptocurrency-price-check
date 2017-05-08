@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CryptonatorResponse> call, Throwable t) {
-                Log.d("MAIN", t.getMessage());
+                progressBar.setVisibility(View.GONE);
                 showSnackbar("Consider checking your internet connection", findViewById(R.id.toolbar), Snackbar.LENGTH_INDEFINITE);
             }
         });
