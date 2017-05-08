@@ -7,10 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -21,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -48,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     CryptonatorResponse cryptonatorResponse;
 
     ProgressBar progressBar;
+    TableRow volumeRow;
+    TableRow volumeValueRow;
 
     AutoCompleteTextView baseAutoCompleteTV;
     AutoCompleteTextView targetAutoCompleteTV;
@@ -204,7 +204,23 @@ public class MainActivity extends AppCompatActivity {
 
             priceTextView.setText(ticker.getPrice());
             changeTextView.setText(ticker.getChange());
-            volumeTextView.setText(ticker.getVolume());
+
+            volumeRow = (TableRow) findViewById(R.id.volume_Row);
+            volumeValueRow = (TableRow) findViewById(R.id.volume_value_Row);
+
+            if (ticker.getVolume().equals("")) {
+
+                volumeRow.setVisibility(View.GONE);
+                volumeValueRow.setVisibility(View.GONE);
+
+            } else {
+                
+                volumeRow.setVisibility(View.VISIBLE);
+                volumeValueRow.setVisibility(View.VISIBLE);
+
+                volumeTextView.setText(ticker.getVolume());
+            }
+
 
             Date date = new Date(Long.parseLong(cryptonatorResponse.getTimestamp()) * 1000);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy hh:mm:ss");

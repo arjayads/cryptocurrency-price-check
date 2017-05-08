@@ -1,6 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="label_text_size">22sp</dimen>
+    <dimen name="value_text_size">30sp</dimen>
     <dimen name="label_currency_padding_top">15dp</dimen>
     <dimen name="label_currency_padding_bottom">15dp</dimen>
     <dimen name="label_currency_padding_right">5dp</dimen>
