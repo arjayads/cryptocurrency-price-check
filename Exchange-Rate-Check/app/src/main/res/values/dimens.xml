@@ -6,4 +6,5 @@
     <dimen name="label_currency_padding_bottom">15dp</dimen>
     <dimen name="label_currency_padding_right">5dp</dimen>
     <dimen name="label_currency_padding_left">5dp</dimen>
+    <dimen name="button_padding_lr">15dp</dimen>
 </resources>

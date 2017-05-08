@@ -17,6 +17,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar progressBar;
     TableRow volumeRow;
     TableRow volumeValueRow;
+    ScrollView mainScrollView;
+    Button reverseButton;
 
     AutoCompleteTextView baseAutoCompleteTV;
     AutoCompleteTextView targetAutoCompleteTV;
@@ -69,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         getSupportActionBar().setTitle(R.string.toolbar_title);
 
+        mainScrollView = (ScrollView) findViewById(R.id.main_ScrollView);
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 
@@ -76,6 +81,34 @@ public class MainActivity extends AppCompatActivity {
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                findRates();
+            }
+        });
+
+        reverseButton = (Button) findViewById(R.id.reverse_button);
+        reverseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (!hasEnteredCurrency()) {
+                    showSnackbar("Select base and target currency", findViewById(R.id.toolbar), Snackbar.LENGTH_INDEFINITE);
+                    return;
+                }
+
+                Currency temp = baseCurrency;
+                baseCurrency = targetCurrency;
+                targetCurrency = temp;
+
+                targetAutoCompleteTV.setText(targetCurrency.toString());
+                baseAutoCompleteTV.setText(baseCurrency.toString());
+
+                baseAutoCompleteTV.dismissDropDown();
+                targetAutoCompleteTV.dismissDropDown();
+
+                baseAutoCompleteTV.requestFocus();
+
+                mainScrollView.smoothScrollTo(0,0);
+
                 findRates();
             }
         });
@@ -241,6 +274,8 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout header = (LinearLayout)findViewById(R.id.base_target_linearLayout);
         header.setVisibility(visibility);
+
+        reverseButton.setVisibility(visibility);
 
     }
 
