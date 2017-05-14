@@ -1,13 +1,19 @@
 package ads.check.rate.exchange_rate_check;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -36,6 +42,8 @@ import java.util.Date;
 import ads.check.rate.exchange_rate_check.api.CryptonatorApi;
 import ads.check.rate.exchange_rate_check.api.CryptonatorResponse;
 import ads.check.rate.exchange_rate_check.api.Ticker;
+import ads.check.rate.exchange_rate_check.sqlite.ConversionResultContract;
+import ads.check.rate.exchange_rate_check.sqlite.CxrDbHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
     Currency baseCurrency;
     Currency targetCurrency;
+
+    CxrDbHelper cxrDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void findRates() {
+
+        cryptonatorResponse = null; // reset result
 
         hideKeyBoard();
         toogleResultViews(View.INVISIBLE);
@@ -399,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -413,11 +425,89 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        cxrDbHelper = new CxrDbHelper(getBaseContext());
+
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_save) {
+        if (id == R.id.action_view) {
+
+            SQLiteDatabase db = cxrDbHelper.getReadableDatabase();
+
+            String [] columns = {
+                    ConversionResultContract.ConversionEntry._ID,
+                    ConversionResultContract.ConversionEntry.COLUMN_NAME_BASE,
+                    ConversionResultContract.ConversionEntry.COLUMN_NAME_TARGET,
+                    ConversionResultContract.ConversionEntry.COLUMN_NAME_PRICE,
+                    ConversionResultContract.ConversionEntry.COLUMN_NAME_BASE_DESC,
+                    ConversionResultContract.ConversionEntry.COLUMN_NAME_TARGET_DESC,
+                    ConversionResultContract.ConversionEntry.COLUMN_NAME_VOLUME,
+                    ConversionResultContract.ConversionEntry.COLUMN_NAME_CHANGE,
+                    ConversionResultContract.ConversionEntry.COLUMN_NAME_DATETIME,
+            };
+
+
+            Cursor cursor = db.query(
+                    ConversionResultContract.ConversionEntry.TABLE_NAME,
+                    columns,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            while (cursor.moveToNext()) {
+                String val = cursor.getString(cursor.getColumnIndex(ConversionResultContract.ConversionEntry.COLUMN_NAME_BASE));
+                val = cursor.getString(cursor.getColumnIndex(ConversionResultContract.ConversionEntry.COLUMN_NAME_BASE_DESC));
+                val = cursor.getString(cursor.getColumnIndex(ConversionResultContract.ConversionEntry.COLUMN_NAME_TARGET));
+                val = cursor.getString(cursor.getColumnIndex(ConversionResultContract.ConversionEntry.COLUMN_NAME_TARGET_DESC));
+                val = cursor.getString(cursor.getColumnIndex(ConversionResultContract.ConversionEntry.COLUMN_NAME_PRICE));
+                val = cursor.getString(cursor.getColumnIndex(ConversionResultContract.ConversionEntry.COLUMN_NAME_VOLUME));
+                val = cursor.getString(cursor.getColumnIndex(ConversionResultContract.ConversionEntry.COLUMN_NAME_CHANGE));
+                val = cursor.getString(cursor.getColumnIndex(ConversionResultContract.ConversionEntry.COLUMN_NAME_DATETIME));
+            }
+
+            cursor.close();
+
+        } else if (id == R.id.action_save) {
+
+            try {
+
+                // check if has result
+                if (cryptonatorResponse != null && cryptonatorResponse.getTicker() != null) {
+
+                    // Gets the data repository in write mode
+                    SQLiteDatabase db = cxrDbHelper.getWritableDatabase();
+
+                    // Create a new map of values, where column names are the keys
+                    ContentValues values = new ContentValues();
+                    values.put(ConversionResultContract.ConversionEntry.COLUMN_NAME_BASE, baseCurrency.getCode());
+                    values.put(ConversionResultContract.ConversionEntry.COLUMN_NAME_BASE_DESC, baseCurrency.getName());
+
+                    values.put(ConversionResultContract.ConversionEntry.COLUMN_NAME_TARGET, targetCurrency.getCode());
+                    values.put(ConversionResultContract.ConversionEntry.COLUMN_NAME_TARGET_DESC, targetCurrency.getName());
+
+                    Ticker ticker = cryptonatorResponse.getTicker();
+
+                    values.put(ConversionResultContract.ConversionEntry.COLUMN_NAME_PRICE, ticker.getPrice());
+                    values.put(ConversionResultContract.ConversionEntry.COLUMN_NAME_VOLUME, ticker.getVolume());
+                    values.put(ConversionResultContract.ConversionEntry.COLUMN_NAME_CHANGE, ticker.getChange());
+                    values.put(ConversionResultContract.ConversionEntry.COLUMN_NAME_DATETIME, cryptonatorResponse.getTimestamp());
+
+                    // Insert the new row, returning the primary key value of the new row
+                    long newRowId = db.insert(ConversionResultContract.ConversionEntry.TABLE_NAME, null, values);
+
+                    showSnackbar("Result saved", findViewById(R.id.toolbar), Snackbar.LENGTH_SHORT);
+
+                } else {
+                    showSnackbar("No conversion results", findViewById(R.id.toolbar), Snackbar.LENGTH_INDEFINITE);
+                }
+
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 }
